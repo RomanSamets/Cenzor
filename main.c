@@ -87,21 +87,35 @@ int transformFile(char fileName[fileNameMaxLen]) {
 			buf[i] = tolower((unsigned char) buf[i]);
 		}
 
+		int y = 0;
 		for (int i = 0; i < wordCounts; ++i) {
-			if (strstr(buf, "ck") != NULL) {offset = 0;}
-			if (strstr(buf, "er") != NULL) {offset = 2;}
-			if (strstr(buf, "ed") != NULL) {offset = 2;}
-			if (strstr(buf, "ing") != NULL) {offset = 3;}
-
+			if (strstr(buf, "ing")) {
+				offset = 3;
+				goto T;
+			}
+			if (strstr(buf, "ck")) {
+				offset = 0;
+			}
+			if (strstr(buf, "er")) {
+				offset = 2;	
+			}
+			if (strstr(buf, "ed")) {
+				offset = 2;
+				goto T;
+			}
+			T:
 			if (strcmp(buf, searchedWords[i]) == 0) {
-				for (int i = 0; i < strlen(buf); ++i) {
-					// buf[(i!=0)? i : 1] = '*';
-					buf[(i!=0)? i : 1] = replaceSymbols[rand()%(strlen(replaceSymbols))]; 
-				}
-			} 
-			if (strncmp(buf, searchedWords[i], strlen(searchedWords[i])) == 0) {
 				for (int i = 0; i < strlen(buf)-offset; ++i) {
+					// buf[(i!=0)? i : 1] = '*';
 					buf[(i!=0)? i : 1] = replaceSymbols[rand()%(strlen(replaceSymbols))];
+				}
+				break;
+			} else {
+				if (strncmp(buf, searchedWords[i], strlen(searchedWords[i])) == 0) {
+					for (int i = 0; i < strlen(buf)-offset; ++i) {
+						buf[(i!=0)? i : 1] = replaceSymbols[rand()%(strlen(replaceSymbols))];
+					}
+					break;
 				}
 			}
 		}
